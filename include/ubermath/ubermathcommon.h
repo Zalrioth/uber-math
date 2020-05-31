@@ -16,18 +16,34 @@
 #include <arm_neon.h>
 #else
 #define ARCH_32_64
-#ifdef _MSC_VER
 #include <smmintrin.h>
-#endif
+
+// TODO: This should be modified by user to toggle
 #define USE_AVX2
-#define simd_float4 alignas(16) __m128
+
+#define simd_align16 alignas(16)
+#define simd_float4 __m128
+#define simd_float4_set1 _mm_set1_ps
+
 #ifdef USE_AVX2
 #include <immintrin.h>
-#define SIMD_LENGTH 8
-#define simd_float_max alignas(32) __m256d
+#define SIMD_MAX_LENGTH 8
+
+#define simd_align32 alignas(32)
+#define simd_float8 __m256
+#define simd_float8_set1 _mm256_set1_ps
+
+#define simd_align_max simd_align32
+#define simd_float_max simd_float8
+#define simd_float_max_set1 simd_float8_set1
+#define simd_float_max_add _mm256_add_ps
 #else
-#define SIMD_LENGTH 4
-#define simd_float_max alignas(16) __m128
+#define SIMD_MAX_LENGTH 4
+
+#define simd_align_max simd_align16
+#define simd_float_max simd_float4
+#define simd_float_max_set1 simd_float4_set1
+#define simd_float_max_add _mm_add_ps
 #endif
 #endif
 
