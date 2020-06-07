@@ -14,5 +14,6 @@ int main(int argc, char* argv[]) {
   printf("Particle 3 is x: %f y: %f\n", pos3.x, pos3.y);
   printf("Particle 4 is x: %f y: %f\n", pos4.x, pos4.y);
 
+  
   return 0;
 }

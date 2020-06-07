@@ -37,9 +37,11 @@ void particles_remove(struct Particles* particles, size_t position) {
 
 // Apply gravity force in groups of max simd support sse4/neon is 4 avx2 is 8
 void particles_apply_gravity(struct Particles* particles) {
-  simd_float_max gravity = simd_float_max_set1(0.5f);
+  vec2_simd gravity = {.simd_data[0] = simd_float_max_set1(0.0f), .simd_data[1] = simd_float_max_set1(0.5f)};
+
   for (int iter_num = 0; iter_num < vec2_soa_iterations(particles->size); iter_num++)
-    particles->vec2_entities.simd_data_y[iter_num] = vec2_soa_add(particles->vec2_entities.simd_data_y[iter_num], gravity);
+    vec2_soa_add(&particles->vec2_entities, iter_num, gravity);
+  //particles->vec2_entities.simd_data_y[iter_num] = vec2_soa_add(particles->vec2_entities.simd_data_y[iter_num], gravity);
 
   for (int particle_num = 0; particle_num < particles->size; particle_num++)
     printf("Particle %d position after gravity addition is x: %f y: %f\n", particle_num, particles->vec2_entities.x[particle_num], particles->vec2_entities.y[particle_num]);

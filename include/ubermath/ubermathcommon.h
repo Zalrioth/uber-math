@@ -37,6 +37,9 @@
 #define simd_float_max simd_float8
 #define simd_float_max_set1 simd_float8_set1
 #define simd_float_max_add _mm256_add_ps
+#define simd_float_max_sub _mm256_sub_ps
+#define simd_float_max_mul _mm256_mul_ps
+#define simd_float_max_div _mm256_div_ps
 #else
 #define SIMD_MAX_LENGTH 4
 
@@ -44,6 +47,9 @@
 #define simd_float_max simd_float4
 #define simd_float_max_set1 simd_float4_set1
 #define simd_float_max_add _mm_add_ps
+#define simd_float_max_sub _mm_sub_ps
+#define simd_float_max_mul _mm_mul_ps
+#define simd_float_max_div _mm_div_ps
 #endif
 #endif
 
