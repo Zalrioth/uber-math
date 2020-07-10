@@ -2,7 +2,9 @@
 #ifndef MAT4_H
 #define MAT4_H
 
+#include "quat.h"
 #include "ubermathcommon.h"
+#include "vec3.h"
 #include "vec4.h"
 
 #define MAT4_INIT_ZERO \
@@ -79,6 +81,114 @@ static inline mat4 mat4_mul(mat4 m1, mat4 m2) {
 #else
 // Neon
 #endif
+  // Reference without SIMD
+  //return (mat4){(m2.data[0] * m1.data[0]) + (m2.data[4] * m1.data[1]) + (m2.data[8] * m1.data[2]),
+  //              (m2.data[1] * m1.data[0]) + (m2.data[5] * m1.data[1]) + (m2.data[9] * m1.data[2]),
+  //              (m2.data[2] * m1.data[0]) + (m2.data[6] * m1.data[1]) + (m2.data[10] * m1.data[2]),
+  //              (m2.data[3] * m1.data[0]) + (m2.data[7] * m1.data[1]) + (m2.data[11] * m1.data[2]) + m1.data[3],
+  //              (m2.data[0] * m1.data[4]) + (m2.data[4] * m1.data[5]) + (m2.data[8] * m1.data[6]),
+  //              (m2.data[1] * m1.data[4]) + (m2.data[5] * m1.data[5]) + (m2.data[9] * m1.data[6]),
+  //              (m2.data[2] * m1.data[4]) + (m2.data[6] * m1.data[5]) + (m2.data[10] * m1.data[6]),
+  //              (m2.data[3] * m1.data[4]) + (m2.data[7] * m1.data[5]) + (m2.data[11] * m1.data[6]) + m1.data[7],
+  //              (m2.data[0] * m1.data[8]) + (m2.data[4] * m1.data[9]) + (m2.data[8] * m1.data[10]),
+  //              (m2.data[1] * m1.data[8]) + (m2.data[5] * m1.data[9]) + (m2.data[9] * m1.data[10]),
+  //              (m2.data[2] * m1.data[8]) + (m2.data[6] * m1.data[9]) + (m2.data[10] * m1.data[10]),
+  //              (m2.data[3] * m1.data[8]) + (m2.data[7] * m1.data[9]) + (m2.data[11] * m1.data[10]) + m1.data[11]};
+}
+
+// Transform
+static inline vec3 mat4_transform(mat4 m1, vec3 v1) {
+  return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[1] + v1.data[2] * m1.data[2] + m1.data[3],
+                .data[1] = v1.data[0] * m1.data[4] + v1.data[1] * m1.data[5] + v1.data[2] * m1.data[6] + m1.data[7],
+                .data[2] = v1.data[0] * m1.data[8] + v1.data[1] * m1.data[9] + v1.data[2] * m1.data[10] + m1.data[11]};
+}
+
+static inline float mat4_determinant(mat4 m1) {
+  return -m1.data[8] * m1.data[5] * m1.data[2] + m1.data[4] * m1.data[9] * m1.data[2] + m1.data[8] * m1.data[1] * m1.data[6] - m1.data[0] * m1.data[9] * m1.data[6] - m1.data[4] * m1.data[1] * m1.data[10] + m1.data[0] * m1.data[5] * m1.data[10];
+}
+
+static inline mat4 mat4_inverse(mat4 m1) {
+  float det = mat4_determinant(m1);
+  if (det == 0)
+    return m1;
+  det = 1.0f / det;
+
+  return (mat4){.data[0] = (-m1.data[9] * m1.data[6] + m1.data[5] * m1.data[10]) * det,
+                .data[1] = (m1.data[9] * m1.data[2] - m1.data[1] * m1.data[10]) * det,
+                .data[2] = (-m1.data[5] * m1.data[2] + m1.data[1] * m1.data[6]) * det,
+                .data[3] = (m1.data[9] * m1.data[6] * m1.data[3] - m1.data[5] * m1.data[10] * m1.data[3] - m1.data[9] * m1.data[2] * m1.data[7] + m1.data[1] * m1.data[10] * m1.data[7] + m1.data[5] * m1.data[2] * m1.data[11] - m1.data[1] * m1.data[6] * m1.data[11]) * det,
+                .data[4] = (m1.data[8] * m1.data[6] - m1.data[4] * m1.data[10]) * det,
+                .data[5] = (-m1.data[8] * m1.data[2] + m1.data[0] * m1.data[10]) * det,
+                .data[6] = (+m1.data[4] * m1.data[2] - m1.data[0] * m1.data[6]) * det,
+                .data[7] = (-m1.data[8] * m1.data[6] * m1.data[3] + m1.data[4] * m1.data[10] * m1.data[3] + m1.data[8] * m1.data[2] * m1.data[7] - m1.data[0] * m1.data[10] * m1.data[7] - m1.data[4] * m1.data[2] * m1.data[11] + m1.data[0] * m1.data[6] * m1.data[11]) * det,
+                .data[8] = (-m1.data[8] * m1.data[5] + m1.data[4] * m1.data[9]) * det,
+                .data[9] = (m1.data[8] * m1.data[1] - m1.data[0] * m1.data[9]) * det,
+                .data[10] = (-m1.data[4] * m1.data[1] + m1.data[0] * m1.data[5]) * det,
+                .data[11] = (m1.data[8] * m1.data[5] * m1.data[3] - m1.data[4] * m1.data[9] * m1.data[3] - m1.data[8] * m1.data[1] * m1.data[7] + m1.data[0] * m1.data[9] * m1.data[7] + m1.data[4] * m1.data[1] * m1.data[11] - m1.data[0] * m1.data[5] * m1.data[11]) * det};
+}
+
+static inline vec3 mat4_transform_direction(mat4 m1, vec3 v1) {
+  return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[1] + v1.data[2] * m1.data[2],
+                .data[1] = v1.data[0] * m1.data[4] + v1.data[1] * m1.data[5] + v1.data[2] * m1.data[6],
+                .data[2] = v1.data[0] * m1.data[8] + v1.data[1] * m1.data[9] + v1.data[2] * m1.data[10]};
+}
+
+static inline vec3 mat4_transform_inverse_direction(mat4 m1, vec3 v1) {
+  return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[4] + v1.data[2] * m1.data[8],
+                .data[1] = v1.data[0] * m1.data[1] + v1.data[1] * m1.data[5] + v1.data[2] * m1.data[9],
+                .data[2] = v1.data[0] * m1.data[2] + v1.data[1] * m1.data[6] + v1.data[2] * m1.data[10]};
+}
+
+static inline vec3 mat4_transform_inverse(mat4 m1, vec3 v1) {
+  vec3 temp = v1;
+  temp.data[0] -= m1.data[3];
+  temp.data[1] -= m1.data[7];
+  temp.data[2] -= m1.data[11];
+
+  return (vec3){.data[0] = temp.data[0] * m1.data[0] + temp.data[1] * m1.data[4] + temp.data[2] * m1.data[8],
+                .data[1] = temp.data[0] * m1.data[1] + temp.data[1] * m1.data[5] + temp.data[2] * m1.data[9],
+                .data[2] = temp.data[0] * m1.data[2] + temp.data[1] * m1.data[6] + temp.data[2] * m1.data[10]};
+}
+
+static inline vec3 mat4_get_axis_vector(mat4 m1, int i) {
+  return (vec3){.data[0] = m1.data[i], .data[1] = m1.data[i + 4], .data[2] = m1.data[i + 8]};
+}
+
+static inline mat4 mat4__orientation_and_pos(mat4 m1, quat q1, vec3 v1) {
+  return (mat4){.data[0] = 1 - (2 * q1.data[2] * q1.data[2] + 2 * q1.data[3] * q1.data[3]),
+                .data[1] = 2 * q1.data[1] * q1.data[2] + 2 * q1.data[3] * q1.data[0],
+                .data[2] = 2 * q1.data[1] * q1.data[3] - 2 * q1.data[2] * q1.data[0],
+                .data[3] = v1.data[0],
+                .data[4] = 2 * q1.data[1] * q1.data[2] - 2 * q1.data[3] * q1.data[0],
+                .data[5] = 1 - (2 * q1.data[1] * q1.data[1] + 2 * q1.data[3] * q1.data[3]),
+                .data[6] = 2 * q1.data[2] * q1.data[3] + 2 * q1.data[1] * q1.data[0],
+                .data[7] = v1.data[1],
+                .data[8] = 2 * q1.data[1] * q1.data[3] + 2 * q1.data[2] * q1.data[0],
+                .data[9] = 2 * q1.data[2] * q1.data[3] - 2 * q1.data[1] * q1.data[0],
+                .data[10] = 1 - (2 * q1.data[1] * q1.data[1] + 2 * q1.data[2] * q1.data[2]),
+                .data[11] = v1.data[2]};
+}
+
+static inline void mat4_fill_gl_array(mat4 m1, float* array) {
+  array[0] = m1.data[0];
+  array[1] = m1.data[4];
+  array[2] = m1.data[8];
+  array[3] = 0.0f;
+
+  array[4] = m1.data[1];
+  array[5] = m1.data[5];
+  array[6] = m1.data[9];
+  array[7] = 0.0f;
+
+  array[8] = m1.data[2];
+  array[9] = m1.data[6];
+  array[10] = m1.data[10];
+  array[11] = 0.0f;
+
+  array[12] = m1.data[3];
+  array[13] = m1.data[7];
+  array[14] = m1.data[11];
+  array[15] = 1.0f;
 }
 
 #endif  // MAT4_H

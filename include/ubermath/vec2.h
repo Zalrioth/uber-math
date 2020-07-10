@@ -18,7 +18,7 @@ typedef struct vec2 {
     struct {
       float u, v;
     };
-    float data[2];
+    simd_align_max float data[2];
   };
 } vec2;
 
