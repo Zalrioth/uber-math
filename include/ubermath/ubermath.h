@@ -4,6 +4,7 @@
 
 #define UM_PI 3.14159f
 
+#include "ivec3.h"
 #include "mat3.h"
 #include "mat4.h"
 #include "quat.h"
