@@ -22,6 +22,14 @@ typedef struct vec4 {
   };
 } vec4;
 
+static inline vec4 vec4_add(vec4 a, vec4 b);
+static inline vec4 vec4_sub(vec4 a, vec4 b);
+static inline vec4 vec4_mul(vec4 a, vec4 b);
+static inline vec4 vec4_div(vec4 a, vec4 b);
+static inline vec4 vec4_divs(vec4 a, float s);
+static inline vec4 vec4_scale(vec4 a, float s);
+static inline float vec4_dot(vec4 a, vec4 b);
+
 static inline vec4 vec4_add(vec4 a, vec4 b) {
   return (vec4){.data[0] = a.data[0] + b.data[0], .data[1] = a.data[1] + b.data[1], .data[2] = a.data[2] + b.data[2], .data[3] = a.data[3] + b.data[3]};
 }

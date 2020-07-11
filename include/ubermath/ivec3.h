@@ -10,7 +10,7 @@
 typedef struct ivec3 {
   union {
     struct {
-      int id1, id2, id3;
+      int id0, id1, id2;
     };
     simd_align_max int data[3];
   };

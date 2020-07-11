@@ -42,6 +42,7 @@ static inline bool vec3_greater_than(vec3 v1, vec3 v2);
 static inline bool vec3_less_than_equal(vec3 v1, vec3 v2);
 static inline bool vec3_greater_than_equal(vec3 v1, vec3 v2);
 static inline vec3 vec3_invert(vec3 v1);
+static inline vec3 vec3_interpolate_linear(vec3 start, vec3 end, float progression);
 
 static inline vec3 vec3_add(vec3 a, vec3 b) {
   return (vec3){.data[0] = a.data[0] + b.data[0], .data[1] = a.data[1] + b.data[1], .data[2] = a.data[2] + b.data[2]};
@@ -132,6 +133,12 @@ static inline bool vec3_greater_than_equal(vec3 v1, vec3 v2) {
 
 static inline vec3 vec3_invert(vec3 v1) {
   return (vec3){.data[0] = -v1.data[0], .data[1] = -v1.data[1], .data[2] = -v1.data[2]};
+}
+
+static inline vec3 vec3_interpolate_linear(vec3 start, vec3 end, float progression) {
+  return (vec3){.data[0] = start.data[0] + (end.data[0] - start.data[0]) * progression,
+                .data[1] = start.data[1] + (end.data[1] - start.data[1]) * progression,
+                .data[2] = start.data[2] + (end.data[2] - start.data[2]) * progression};
 }
 
 typedef struct vec3_simd {
