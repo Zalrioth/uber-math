@@ -81,6 +81,8 @@ static inline quat mat4_to_quaternion(mat4 matrix) {
   dest.data[0] /= mag;
   dest.data[1] /= mag;
   dest.data[2] /= mag;
+
+  return dest;
 }
 
 #endif  // UBER_MATH_H
