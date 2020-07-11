@@ -32,6 +32,7 @@ static inline quat quaternion_normalise(quat q1);
 static inline quat quaternion_mul(quat q1, quat q2);
 static inline quat quaternion_add_scaled_vector(quat q1, vec3 v1, float scale);
 static inline quat quaternion_rotate_by_vector(quat q1, vec3 v1);
+static inline quat quat_interpolate_linear(quat a, quat b, float blend);
 
 static inline quat quaternion_set(float r, float i, float j, float k) {
   return (quat){.data[0] = r, .data[1] = i, .data[2] = j, .data[3] = k};
@@ -61,6 +62,31 @@ static inline quat quaternion_add_scaled_vector(quat q1, vec3 v1, float scale) {
 
 static inline quat quaternion_rotate_by_vector(quat q1, vec3 v1) {
   return quaternion_mul(q1, (quat){.data[0] = 0, .data[1] = v1.data[0], .data[2] = v1.data[1], .data[3] = v1.data[2]});
+}
+
+static inline quat quat_interpolate_linear(quat a, quat b, float blend) {
+  quat dest;
+  float dot = a.data[3] * b.data[3] + a.data[0] * b.data[0] + a.data[1] * b.data[1] + a.data[2] * b.data[2];
+  float blendI = 1.0f - blend;
+  if (dot < 0) {
+    dest.data[3] = blendI * a.data[3] + blend * -b.data[3];
+    dest.data[0] = blendI * a.data[0] + blend * -b.data[0];
+    dest.data[1] = blendI * a.data[1] + blend * -b.data[1];
+    dest.data[2] = blendI * a.data[2] + blend * -b.data[2];
+  } else {
+    dest.data[3] = blendI * a.data[3] + blend * b.data[3];
+    dest.data[0] = blendI * a.data[0] + blend * b.data[0];
+    dest.data[1] = blendI * a.data[1] + blend * b.data[1];
+    dest.data[2] = blendI * a.data[2] + blend * b.data[2];
+  }
+
+  float mag = sqrtf(dest.data[3] * dest.data[3] + dest.data[0] * dest.data[0] + dest.data[1] * dest.data[1] + dest.data[2] * dest.data[2]);
+  dest.data[3] /= mag;
+  dest.data[0] /= mag;
+  dest.data[1] /= mag;
+  dest.data[2] /= mag;
+
+  return dest;
 }
 
 #endif  // QUAT_H

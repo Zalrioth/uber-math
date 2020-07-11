@@ -8,10 +8,10 @@
 #include "vec4.h"
 
 #define MAT4_ZERO \
-  (mat4){.data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f}, {.data[4] = 0.0f, .data[5] = 0.0f, .data[6] = 0.0f, .data[7] = 0.0f}, {.data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 0.0f, .data[11] = 0.0f}, { .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 0.0f }
+  (mat4) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f, .data[4] = 0.0f, .data[5] = 0.0f, .data[6] = 0.0f, .data[7] = 0.0f, .data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 0.0f, .data[11] = 0.0f, .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 0.0f }
 
 #define MAT4_IDENTITY \
-  (mat4){.data[1] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f}, {.data[4] = 0.0f, .data[5] = 1.0f, .data[6] = 0.0f, .data[7] = 0.0f}, {.data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 1.0f, .data[11] = 0.0f}, { .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 1.0f }
+  (mat4) { .data[1] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f, .data[4] = 0.0f, .data[5] = 1.0f, .data[6] = 0.0f, .data[7] = 0.0f, .data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 1.0f, .data[11] = 0.0f, .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 1.0f }
 
 typedef struct mat4 {
   union {
@@ -30,6 +30,17 @@ typedef struct mat4 {
 #endif
   };
 } mat4;
+
+static inline mat4 mat4_mul(mat4 m1, mat4 m2);
+static inline vec3 mat4_transform(mat4 m1, vec3 v1);
+static inline float mat4_determinant(mat4 m1);
+static inline mat4 mat4_inverse(mat4 m1);
+static inline vec3 mat4_transform_direction(mat4 m1, vec3 v1);
+static inline vec3 mat4_transform_inverse_direction(mat4 m1, vec3 v1);
+static inline vec3 mat4_transform_inverse(mat4 m1, vec3 v1);
+static inline vec3 mat4_get_axis_vector(mat4 m1, int i);
+static inline mat4 mat4__orientation_and_pos(mat4 m1, quat q1, vec3 v1);
+static inline void mat4_fill_gl_array(mat4 m1, float* array);
 
 static inline mat4 mat4_mul(mat4 m1, mat4 m2) {
 #ifdef ARCH_32_64
@@ -96,7 +107,7 @@ static inline mat4 mat4_mul(mat4 m1, mat4 m2) {
   //              (m2.data[3] * m1.data[8]) + (m2.data[7] * m1.data[9]) + (m2.data[11] * m1.data[10]) + m1.data[11]};
 }
 
-// Transform
+// Transform also translate?
 static inline vec3 mat4_transform(mat4 m1, vec3 v1) {
   return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[1] + v1.data[2] * m1.data[2] + m1.data[3],
                 .data[1] = v1.data[0] * m1.data[4] + v1.data[1] * m1.data[5] + v1.data[2] * m1.data[6] + m1.data[7],
