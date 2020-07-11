@@ -69,6 +69,7 @@ mat3 mat3_skew_symmetric(mat3 m1, vec3 v1) {
                 .data[8] = 0};
 }
 
+// Mul vector
 vec3 mat3_transform(mat3 m1, vec3 v1) {
   return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[1] + v1.data[2] * m1.data[2],
                 .data[1] = v1.data[0] * m1.data[3] + v1.data[1] * m1.data[4] + v1.data[2] * m1.data[5],

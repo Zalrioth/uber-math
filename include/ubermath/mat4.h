@@ -31,6 +31,17 @@ typedef struct mat4 {
   };
 } mat4;
 
+static inline mat4 mat4_mul(mat4 m1, mat4 m2);
+static inline vec3 mat4_transform(mat4 m1, vec3 v1);
+static inline float mat4_determinant(mat4 m1);
+static inline mat4 mat4_inverse(mat4 m1);
+static inline vec3 mat4_transform_direction(mat4 m1, vec3 v1);
+static inline vec3 mat4_transform_inverse_direction(mat4 m1, vec3 v1);
+static inline vec3 mat4_transform_inverse(mat4 m1, vec3 v1);
+static inline vec3 mat4_get_axis_vector(mat4 m1, int i);
+static inline mat4 mat4__orientation_and_pos(mat4 m1, quat q1, vec3 v1);
+static inline void mat4_fill_gl_array(mat4 m1, float* array);
+
 static inline mat4 mat4_mul(mat4 m1, mat4 m2) {
 #ifdef ARCH_32_64
 #ifdef USE_AVX2
