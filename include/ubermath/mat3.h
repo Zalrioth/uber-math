@@ -6,17 +6,11 @@
 #include "ubermathcommon.h"
 #include "vec3.h"
 
-#define MAT3_INIT_ZERO \
-  {.data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f}, {.data[3] = 0.0f, .data[4] = 0.0f, .data[5] = 0.0f}, { .data[6] = 0.0f, .data[7] = 0.0f, .data[8] = 0.0f }
-
-#define MAT3_INIT_IDENTITY \
-  {.data[1] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f}, {.data[4] = 0.0f, .data[5] = 1.0f, .data[6] = 0.0f}, { .data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 1.0f }
-
 #define MAT3_ZERO \
-  (mat3){.data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f}, {.data[3] = 0.0f, .data[4] = 0.0f, .data[5] = 0.0f}, { .data[6] = 0.0f, .data[7] = 0.0f, .data[8] = 0.0f }
+  (mat3) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f, .data[4] = 0.0f, .data[5] = 0.0f, .data[6] = 0.0f, .data[7] = 0.0f, .data[8] = 0.0f }
 
 #define MAT3_IDENTITY \
-  (mat4){.data[1] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f}, {.data[4] = 0.0f, .data[5] = 1.0f, .data[6] = 0.0f}, { .data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 1.0f }
+  (mat3) { .data[0] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f, .data[4] = 1.0f, .data[5] = 0.0f, .data[6] = 0.0f, .data[7] = 0.0f, .data[8] = 1.0f }
 
 typedef struct mat3 {
   union {
@@ -33,7 +27,7 @@ typedef struct mat3 {
 
 mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz);
 mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass);
-mat3 mat3_skew_symmetric(mat3 m1, mat3 v1);
+mat3 mat3_skew_symmetric(mat3 m1, vec3 v1);
 vec3 mat3_transform(mat3 m1, vec3 v1);
 vec3 mat3_transform_transpose(mat3 m1, vec3 v1);
 vec3 mat3_get_row_vector(mat3 m1, int i);
@@ -63,7 +57,7 @@ mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass) {
   return mat_inertia_tensor_coeffs(0.3f * mass * (squares.data[1] + squares.data[2]), 0.3f * mass * (squares.data[0] + squares.data[2]), 0.3f * mass * (squares.data[0] + squares.data[1]), 0, 0, 0);
 }
 
-mat3 mat3__skew_symmetric(mat3 m1, mat3 v1) {
+mat3 mat3_skew_symmetric(mat3 m1, vec3 v1) {
   return (mat3){.data[0] = 0,
                 .data[1] = -v1.data[2],
                 .data[2] = v1.data[1],

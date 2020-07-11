@@ -2,6 +2,8 @@
 #ifndef UBER_MATH_H
 #define UBER_MATH_H
 
+#define UM_PI 3.14159f
+
 #include "mat3.h"
 #include "mat4.h"
 #include "quat.h"

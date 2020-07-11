@@ -5,7 +5,7 @@
 #include "ubermathcommon.h"
 
 #define VEC2_INIT_ZERO \
-  { .data[0] = 0.0f, .data[1] = 0.0f }
+  (vec2) { .data[0] = 0.0f, .data[1] = 0.0f }
 
 typedef struct vec2 {
   union {

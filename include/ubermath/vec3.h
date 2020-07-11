@@ -4,9 +4,6 @@
 
 #include "ubermathcommon.h"
 
-#define VEC3_INIT_ZERO \
-  { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f }
-
 #define VEC3_ZERO \
   (vec3) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f }
 

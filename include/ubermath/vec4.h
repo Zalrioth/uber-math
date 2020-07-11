@@ -4,8 +4,8 @@
 
 #include "ubermathcommon.h"
 
-#define VEC4_INIT_ZERO \
-  { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
+#define VEC4_ZERO \
+  (vec4) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
 
 typedef struct vec4 {
   union {

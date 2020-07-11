@@ -7,11 +7,11 @@
 #include "vec3.h"
 #include "vec4.h"
 
-#define MAT4_INIT_ZERO \
-  {.data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f}, {.data[4] = 0.0f, .data[5] = 0.0f, .data[6] = 0.0f, .data[7] = 0.0f}, {.data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 0.0f, .data[11] = 0.0f}, { .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 0.0f }
+#define MAT4_ZERO \
+  (mat4){.data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f}, {.data[4] = 0.0f, .data[5] = 0.0f, .data[6] = 0.0f, .data[7] = 0.0f}, {.data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 0.0f, .data[11] = 0.0f}, { .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 0.0f }
 
-#define MAT4_INIT_IDENTITY \
-  {.data[1] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f}, {.data[4] = 0.0f, .data[5] = 1.0f, .data[6] = 0.0f, .data[7] = 0.0f}, {.data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 1.0f, .data[11] = 0.0f}, { .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 1.0f }
+#define MAT4_IDENTITY \
+  (mat4){.data[1] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f}, {.data[4] = 0.0f, .data[5] = 1.0f, .data[6] = 0.0f, .data[7] = 0.0f}, {.data[8] = 0.0f, .data[9] = 0.0f, .data[10] = 1.0f, .data[11] = 0.0f}, { .data[12] = 0.0f, .data[13] = 0.0f, .data[14] = 0.0f, .data[15] = 1.0f }
 
 typedef struct mat4 {
   union {

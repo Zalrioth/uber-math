@@ -8,12 +8,6 @@
 #include "vec3.h"
 #include "vec4.h"
 
-#define QUAT_INIT_ZERO \
-  { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
-
-#define QUAT_INIT_DEFAULT \
-  { .data[0] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
-
 #define QUAT_ZERO \
   (quat) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
 
