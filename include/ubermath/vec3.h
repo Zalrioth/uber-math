@@ -18,7 +18,8 @@ typedef struct vec3 {
     struct {
       float u, v, s;
     };
-    simd_align_max float data[3];
+    float data[3];
+    //simd_align_max float data[3];
   };
 } vec3;
 

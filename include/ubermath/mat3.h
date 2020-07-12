@@ -16,12 +16,13 @@ typedef struct mat3 {
   union {
     struct
     {
-      float m11, m21, m31,
-          m12, m22, m32,
-          m13, m23, m33;
+      float m00, m10, m20,
+          m01, m11, m21,
+          m02, m12, m22;
     };
-    vec3 vecs[3];
-    simd_align_max float data[9];
+    float data[9];
+    //vec3 vecs[3];
+    //simd_align_max float data[9];
   };
 } mat3;
 

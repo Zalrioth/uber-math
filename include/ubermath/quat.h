@@ -22,8 +22,9 @@ typedef struct quat {
     struct {
       float r, i, j, k;
     };
-    vec4 vec;
-    simd_align_max float data[4];
+    //vec4 vec;
+    float data[4];
+    //simd_align_max float data[4];
   };
 } quat;
 

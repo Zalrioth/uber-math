@@ -15,7 +15,8 @@ typedef struct ivec3 {
     struct {
       int id0, id1, id2;
     };
-    simd_align_max int data[3];
+    int data[3];
+    //simd_align_max int data[3];
   };
 } ivec3;
 
