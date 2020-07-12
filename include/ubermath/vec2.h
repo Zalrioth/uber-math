@@ -4,7 +4,7 @@
 
 #include "ubermathcommon.h"
 
-#define VEC2_INIT_ZERO \
+#define VEC2_ZERO \
   (vec2) { .data[0] = 0.0f, .data[1] = 0.0f }
 
 typedef struct vec2 {
@@ -13,10 +13,10 @@ typedef struct vec2 {
       float x, y;
     };
     struct {
-      float r, g;
+      float u, v;
     };
     struct {
-      float u, v;
+      float s, t;
     };
     simd_align_max float data[2];
   };

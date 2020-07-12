@@ -12,8 +12,23 @@
 #include "vec3.h"
 #include "vec4.h"
 
+static inline float degree_to_radian(float degree);
+static inline float radian_to_degree(float radian);
+static inline vec4 vec3_to_vec4(vec3 v1);
 static inline mat4 quaternion_to_mat4(quat rotation);
 static inline quat mat4_to_quaternion(mat4 matrix);
+
+static inline float degree_to_radian(float degree) {
+  return degree * (UM_PI / 180.0f);
+}
+
+static inline float radian_to_degree(float radian) {
+  return radian * (180.0f / UM_PI);
+}
+
+static inline vec4 vec3_to_vec4(vec3 v1) {
+  return (vec4){.data[0] = v1.data[0], .data[1] = v1.data[1], .data[2] = v1.data[2], 0.0f};
+}
 
 static inline mat4 quaternion_to_mat4(quat rotation) {
   float xy = rotation.data[0] * rotation.data[1];

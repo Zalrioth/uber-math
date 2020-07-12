@@ -25,22 +25,22 @@ typedef struct mat3 {
   };
 } mat3;
 
-mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz);
-mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass);
-mat3 mat3_skew_symmetric(mat3 m1, vec3 v1);
-vec3 mat3_transform(mat3 m1, vec3 v1);
-vec3 mat3_transform_transpose(mat3 m1, vec3 v1);
-vec3 mat3_get_row_vector(mat3 m1, int i);
-vec3 mat3_get_axis_vector(mat3 m1, int i);
-mat3 mat3_inverse(mat3 m1);
-mat3 mat3_transpose(mat3 m1);
-mat3 mat3_mul_mat3(mat3 m1, mat3 m2);
-mat3 mat3_mul_scalar(mat3 m1, float scalar);
-mat3 mat3_add_mat3(mat3 m1, mat3 m2);
-mat3 mat3_orientation(mat3 q1);
-mat3 mat3_liner_interpolate(mat3 m1, mat3 m2, float prop);
+static inline mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz);
+static inline mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass);
+static inline mat3 mat3_skew_symmetric(mat3 m1, vec3 v1);
+static inline vec3 mat3_transform(mat3 m1, vec3 v1);
+static inline vec3 mat3_transform_transpose(mat3 m1, vec3 v1);
+static inline vec3 mat3_get_row_vector(mat3 m1, int i);
+static inline vec3 mat3_get_axis_vector(mat3 m1, int i);
+static inline mat3 mat3_inverse(mat3 m1);
+static inline mat3 mat3_transpose(mat3 m1);
+static inline mat3 mat3_mul_mat3(mat3 m1, mat3 m2);
+static inline mat3 mat3_mul_scalar(mat3 m1, float scalar);
+static inline mat3 mat3_add_mat3(mat3 m1, mat3 m2);
+static inline mat3 mat3_orientation(mat3 q1);
+static inline mat3 mat3_liner_interpolate(mat3 m1, mat3 m2, float prop);
 
-mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz) {
+static inline mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz) {
   return (mat3){.data[0] = ix,
                 .data[1] = -ixy,
                 .data[2] = -ixz,
@@ -52,12 +52,12 @@ mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ix
                 .data[8] = iz};
 }
 
-mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass) {
+static inline mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass) {
   vec3 squares = vec3_component_product(v1, v1);
   return mat_inertia_tensor_coeffs(0.3f * mass * (squares.data[1] + squares.data[2]), 0.3f * mass * (squares.data[0] + squares.data[2]), 0.3f * mass * (squares.data[0] + squares.data[1]), 0, 0, 0);
 }
 
-mat3 mat3_skew_symmetric(mat3 m1, vec3 v1) {
+static inline mat3 mat3_skew_symmetric(mat3 m1, vec3 v1) {
   return (mat3){.data[0] = 0,
                 .data[1] = -v1.data[2],
                 .data[2] = v1.data[1],
@@ -70,27 +70,27 @@ mat3 mat3_skew_symmetric(mat3 m1, vec3 v1) {
 }
 
 // Mul vector
-vec3 mat3_transform(mat3 m1, vec3 v1) {
+static inline vec3 mat3_transform(mat3 m1, vec3 v1) {
   return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[1] + v1.data[2] * m1.data[2],
                 .data[1] = v1.data[0] * m1.data[3] + v1.data[1] * m1.data[4] + v1.data[2] * m1.data[5],
                 .data[2] = v1.data[0] * m1.data[6] + v1.data[1] * m1.data[7] + v1.data[2] * m1.data[8]};
 }
 
-vec3 mat3_transform_transpose(mat3 m1, vec3 v1) {
+static inline vec3 mat3_transform_transpose(mat3 m1, vec3 v1) {
   return (vec3){.data[0] = v1.data[0] * m1.data[0] + v1.data[1] * m1.data[3] + v1.data[2] * m1.data[6],
                 .data[1] = v1.data[0] * m1.data[1] + v1.data[1] * m1.data[4] + v1.data[2] * m1.data[7],
                 .data[2] = v1.data[0] * m1.data[2] + v1.data[1] * m1.data[5] + v1.data[2] * m1.data[8]};
 }
 
-vec3 mat3_get_row_vector(mat3 m1, int i) {
+static inline vec3 mat3_get_row_vector(mat3 m1, int i) {
   return (vec3){.data[0] = m1.data[i * 3], .data[1] = m1.data[i * 3 + 1], .data[2] = m1.data[i * 3 + 2]};
 }
 
-vec3 mat3_get_axis_vector(mat3 m1, int i) {
+static inline vec3 mat3_get_axis_vector(mat3 m1, int i) {
   return (vec3){.data[0] = m1.data[i], .data[1] = m1.data[i + 3], .data[2] = m1.data[i + 6]};
 }
 
-mat3 mat3_inverse(mat3 m1) {
+static inline mat3 mat3_inverse(mat3 m1) {
   float t4 = m1.data[0] * m1.data[4];
   float t6 = m1.data[0] * m1.data[5];
   float t8 = m1.data[1] * m1.data[3];
@@ -113,7 +113,7 @@ mat3 mat3_inverse(mat3 m1) {
                 .data[8] = (t4 - t8) * t17};
 }
 
-mat3 mat3_transpose(mat3 m1) {
+static inline mat3 mat3_transpose(mat3 m1) {
   return (mat3){.data[0] = m1.data[0],
                 .data[1] = m1.data[3],
                 .data[2] = m1.data[6],
@@ -125,7 +125,7 @@ mat3 mat3_transpose(mat3 m1) {
                 .data[8] = m1.data[8]};
 }
 
-mat3 mat3_mul_mat3(mat3 m1, mat3 m2) {
+static inline mat3 mat3_mul_mat3(mat3 m1, mat3 m2) {
   return (mat3){.data[0] = m1.data[0] * m2.data[0] + m1.data[1] * m2.data[3] + m1.data[2] * m2.data[6],
                 .data[1] = m1.data[0] * m2.data[1] + m1.data[1] * m2.data[4] + m1.data[2] * m2.data[7],
                 .data[2] = m1.data[0] * m2.data[2] + m1.data[1] * m2.data[5] + m1.data[2] * m2.data[8],
@@ -137,7 +137,7 @@ mat3 mat3_mul_mat3(mat3 m1, mat3 m2) {
                 .data[8] = m1.data[6] * m2.data[2] + m1.data[7] * m2.data[5] + m1.data[8] * m2.data[8]};
 }
 
-mat3 mat3_mul_scalar(mat3 m1, float scalar) {
+static inline mat3 mat3_mul_scalar(mat3 m1, float scalar) {
   return (mat3){.data[0] = m1.data[0] * scalar,
                 .data[1] = m1.data[1] * scalar,
                 .data[2] = m1.data[2] * scalar,
@@ -149,7 +149,7 @@ mat3 mat3_mul_scalar(mat3 m1, float scalar) {
                 .data[8] = m1.data[8] * scalar};
 }
 
-mat3 mat3_add_mat3(mat3 m1, mat3 m2) {
+static inline mat3 mat3_add_mat3(mat3 m1, mat3 m2) {
   return (mat3){.data[0] = m1.data[0] + m2.data[0],
                 .data[1] = m1.data[1] + m2.data[1],
                 .data[2] = m1.data[2] + m2.data[2],
@@ -161,7 +161,7 @@ mat3 mat3_add_mat3(mat3 m1, mat3 m2) {
                 .data[8] = m1.data[8] + m2.data[8]};
 }
 
-mat3 mat3_orientation(mat3 q1) {
+static inline mat3 mat3_orientation(mat3 q1) {
   return (mat3){.data[0] = 1 - (2 * q1.data[2] * q1.data[2] + 2 * q1.data[3] * q1.data[3]),
                 .data[1] = 2 * q1.data[1] * q1.data[2] + 2 * q1.data[3] * q1.data[0],
                 .data[2] = 2 * q1.data[1] * q1.data[3] - 2 * q1.data[2] * q1.data[0],
@@ -173,7 +173,7 @@ mat3 mat3_orientation(mat3 q1) {
                 .data[8] = 1 - (2 * q1.data[1] * q1.data[1] + 2 * q1.data[2] * q1.data[2])};
 }
 
-mat3 mat3_liner_interpolate(mat3 m1, mat3 m2, float prop) {
+static inline mat3 mat3_liner_interpolate(mat3 m1, mat3 m2, float prop) {
   return (mat3){.data[0] = m1.data[0] * (1 - prop) + m2.data[0] * prop,
                 .data[1] = m1.data[1] * (1 - prop) + m2.data[1] * prop,
                 .data[2] = m1.data[2] * (1 - prop) + m2.data[2] * prop,
