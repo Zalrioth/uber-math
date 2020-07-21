@@ -16,7 +16,9 @@
 static inline float degree_to_radian(float degree);
 static inline float radian_to_degree(float radian);
 static inline vec4 vec3_to_vec4(vec3 v1);
+static inline vec3 quaternion_to_vec3(quat q1);
 static inline mat4 quaternion_to_mat4(quat rotation);
+static inline mat4 quaternion_to_mat4_other(quat q);
 static inline quat mat4_to_quaternion(mat4 matrix);
 
 static inline float degree_to_radian(float degree) {
@@ -29,6 +31,10 @@ static inline float radian_to_degree(float radian) {
 
 static inline vec4 vec3_to_vec4(vec3 v1) {
   return (vec4){.data[0] = v1.data[0], .data[1] = v1.data[1], .data[2] = v1.data[2], 0.0f};
+}
+
+static inline vec3 quaternion_to_vec3(quat q1) {
+  return (vec3){.data[0] = q1.data[0], .data[1] = q1.data[1], .data[2] = q1.data[2]};
 }
 
 static inline mat4 quaternion_to_mat4(quat rotation) {
@@ -63,6 +69,54 @@ static inline mat4 quaternion_to_mat4(quat rotation) {
   return dest;
 }
 
+// cglm
+static inline mat4 quaternion_to_mat4_other(quat q) {
+  float w, x, y, z,
+      xx, yy, zz,
+      xy, yz, xz,
+      wx, wy, wz, norm, s;
+
+  norm = quaternion_magnitude(q);
+  s = norm > 0.0f ? 2.0f / norm : 0.0f;
+
+  x = q.data[0];
+  y = q.data[1];
+  z = q.data[2];
+  w = q.data[3];
+
+  xx = s * x * x;
+  xy = s * x * y;
+  wx = s * w * x;
+  yy = s * y * y;
+  yz = s * y * z;
+  wy = s * w * y;
+  zz = s * z * z;
+  xz = s * x * z;
+  wz = s * w * z;
+
+  mat4 dest;
+
+  dest.vecs[0].data[0] = 1.0f - yy - zz;
+  dest.vecs[1].data[1] = 1.0f - xx - zz;
+  dest.vecs[2].data[2] = 1.0f - xx - yy;
+  dest.vecs[0].data[1] = xy + wz;
+  dest.vecs[1].data[2] = yz + wx;
+  dest.vecs[2].data[0] = xz + wy;
+  dest.vecs[1].data[0] = xy - wz;
+  dest.vecs[2].data[1] = yz - wx;
+  dest.vecs[0].data[2] = xz - wy;
+  dest.vecs[0].data[3] = 0.0f;
+  dest.vecs[1].data[3] = 0.0f;
+  dest.vecs[2].data[3] = 0.0f;
+  dest.vecs[3].data[0] = 0.0f;
+  dest.vecs[3].data[1] = 0.0f;
+  dest.vecs[3].data[2] = 0.0f;
+  dest.vecs[3].data[3] = 1.0f;
+
+  return dest;
+}
+
+// Collada
 static inline quat mat4_to_quaternion(mat4 matrix) {
   quat dest;
   float diagonal = matrix.m00 + matrix.m11 + matrix.m22;

@@ -12,7 +12,7 @@
   (quat) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
 
 #define QUAT_DEFAULT \
-  (quat) { .data[0] = 1.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 0.0f }
+  (quat) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f, .data[3] = 1.0f }
 
 typedef struct quat {
   union {
@@ -30,7 +30,9 @@ typedef struct quat {
 
 static inline quat quaternion_set(float r, float i, float j, float k);
 static inline quat quaternion_normalise(quat q1);
+static inline quat quaternion_add(quat q1, quat q2);
 static inline quat quaternion_mul(quat q1, quat q2);
+static inline quat quaternion_conjugate(quat q1);
 static inline quat quaternion_add_scaled_vector(quat q1, vec3 v1, float scale);
 static inline quat quaternion_rotate_by_vector(quat q1, vec3 v1);
 static inline quat quat_interpolate_linear(quat a, quat b, float blend);
@@ -42,18 +44,37 @@ static inline quat quaternion_set(float r, float i, float j, float k) {
 static inline quat quaternion_normalise(quat q1) {
   float d = q1.data[0] * q1.data[0] + q1.data[1] * q1.data[1] + q1.data[2] * q1.data[2] + q1.data[3] * q1.data[3];
 
+  //if (d < 0.0f)
   if (d < FLT_EPSILON)
-    return (quat){.data[0] = 1, .data[1] = q1.data[1], .data[2] = q1.data[2], .data[3] = q1.data[3]};
+    return QUAT_DEFAULT;
 
-  d = ((float)1.0) / sqrtf(d);
+  d = 1.0f / sqrtf(d);
   return (quat){.data[0] = q1.data[0] * d, .data[1] = q1.data[1] * d, .data[2] = q1.data[2] * d, .data[3] = q1.data[3] * d};
 }
 
-static inline quat quaternion_mul(quat q1, quat q2) {
-  return (quat){.data[0] = q1.data[0] * q2.data[0] - q1.data[1] * q2.data[1] - q1.data[2] * q2.data[2] - q1.data[3] * q2.data[3],
-                .data[1] = q1.data[0] * q2.data[1] + q1.data[1] * q2.data[0] + q1.data[2] * q2.data[3] - q1.data[3] * q2.data[2],
-                .data[2] = q1.data[0] * q2.data[2] + q1.data[2] * q2.data[0] + q1.data[3] * q2.data[1] - q1.data[1] * q2.data[3],
-                .data[3] = q1.data[0] * q2.data[3] + q1.data[3] * q2.data[0] + q1.data[1] * q2.data[2] - q1.data[2] * q2.data[1]};
+static inline float quaternion_magnitude(quat q1) {
+  return sqrtf(q1.data[0] * q1.data[0] + q1.data[1] * q1.data[1] + q1.data[2] * q1.data[2] + q1.data[3] * q1.data[3]);
+}
+
+static inline quat quaternion_add(quat q1, quat q2) {
+  return (quat){.data[0] = q1.data[0] + q2.data[0], .data[1] = q1.data[1] + q2.data[1], .data[2] = q1.data[2] + q2.data[2], .data[3] = q1.data[3] + q2.data[3]};
+}
+
+static inline quat quaternion_mul(quat p, quat q) {
+  quat dest;
+  dest.data[0] = p.data[3] * q.data[0] + p.data[0] * q.data[3] + p.data[1] * q.data[2] - p.data[2] * q.data[1];
+  dest.data[1] = p.data[3] * q.data[1] - p.data[0] * q.data[2] + p.data[1] * q.data[3] + p.data[2] * q.data[0];
+  dest.data[2] = p.data[3] * q.data[2] + p.data[0] * q.data[1] - p.data[1] * q.data[0] + p.data[2] * q.data[3];
+  dest.data[3] = p.data[3] * q.data[3] - p.data[0] * q.data[0] - p.data[1] * q.data[1] - p.data[2] * q.data[2];
+  return dest;
+  //return (quat){.data[0] = q1.data[0] * q2.data[0] - q1.data[1] * q2.data[1] - q1.data[2] * q2.data[2] - q1.data[3] * q2.data[3],
+  //              .data[1] = q1.data[0] * q2.data[1] + q1.data[1] * q2.data[0] + q1.data[2] * q2.data[3] - q1.data[3] * q2.data[2],
+  //              .data[2] = q1.data[0] * q2.data[2] + q1.data[2] * q2.data[0] + q1.data[3] * q2.data[1] - q1.data[1] * q2.data[3],
+  //              .data[3] = q1.data[0] * q2.data[3] + q1.data[3] * q2.data[0] + q1.data[1] * q2.data[2] - q1.data[2] * q2.data[1]};
+}
+
+static inline quat quaternion_conjugate(quat q1) {
+  return (quat){.data[0] = -q1.data[0], .data[1] = -q1.data[1], .data[2] = -q1.data[2], .data[3] = -q1.data[3]};
 }
 
 static inline quat quaternion_add_scaled_vector(quat q1, vec3 v1, float scale) {
@@ -62,7 +83,7 @@ static inline quat quaternion_add_scaled_vector(quat q1, vec3 v1, float scale) {
 }
 
 static inline quat quaternion_rotate_by_vector(quat q1, vec3 v1) {
-  return quaternion_mul(q1, (quat){.data[0] = 0, .data[1] = v1.data[0], .data[2] = v1.data[1], .data[3] = v1.data[2]});
+  return quaternion_mul(q1, (quat){.data[0] = v1.data[0], .data[1] = v1.data[1], .data[2] = v1.data[2], .data[3] = 0.0f});
 }
 
 static inline quat quat_interpolate_linear(quat a, quat b, float blend) {
