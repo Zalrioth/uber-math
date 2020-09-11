@@ -78,8 +78,8 @@ static inline quat quaternion_conjugate(quat q1) {
 }
 
 static inline quat quaternion_add_scaled_vector(quat q1, vec3 v1, float scale) {
-  quat temp = quaternion_mul(q1, (quat){.data[0] = 0, .data[1] = v1.data[0] * scale, .data[2] = v1.data[1] * scale, .data[3] = v1.data[2] * scale});
-  return (quat){.data[0] = q1.r + temp.r * 0.5f, .data[1] = q1.i + temp.i * 0.5f, .data[2] = q1.j + temp.j * 0.5f, .data[3] = q1.k + temp.k * 0.5f};
+  quat temp = quaternion_mul(q1, (quat){.data[0] = v1.data[0] * scale, .data[1] = v1.data[1] * scale, .data[2] = v1.data[2] * scale, .data[3] = 0.0f});
+  return (quat){.data[0] = q1.data[0] + temp.data[0] * 0.5f, .data[1] = q1.data[1] + temp.data[1] * 0.5f, .data[2] = q1.data[2] + temp.data[2] * 0.5f, .data[3] = q1.data[3] + temp.data[3] * 0.5f};
 }
 
 static inline quat quaternion_rotate_by_vector(quat q1, vec3 v1) {

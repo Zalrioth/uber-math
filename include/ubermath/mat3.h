@@ -21,7 +21,7 @@ typedef struct mat3 {
           m20, m21, m22;
     };
     float data[9];
-    //vec3 vecs[3];
+    vec3 vecs[3];
     //simd_align_max float data[9];
   };
 } mat3;
@@ -41,21 +41,21 @@ static inline mat3 mat3_add_mat3(mat3 m1, mat3 m2);
 static inline mat3 mat3_orientation(mat3 q1);
 static inline mat3 mat3_liner_interpolate(mat3 m1, mat3 m2, float prop);
 
-static inline mat3 mat_inertia_tensor_coeffs(float ix, float iy, float iz, float ixy, float ixz, float iyz) {
-  return (mat3){.data[0] = ix,
-                .data[1] = -ixy,
-                .data[2] = -ixz,
-                .data[3] = -ixy,
-                .data[4] = iy,
-                .data[5] = -iyz,
-                .data[6] = -ixz,
-                .data[7] = -iyz,
-                .data[8] = iz};
-}
-
 static inline mat3 mat3_block_intertia_tensor(mat3 m1, vec3 v1, float mass) {
   vec3 squares = vec3_component_product(v1, v1);
-  return mat_inertia_tensor_coeffs(0.3f * mass * (squares.data[1] + squares.data[2]), 0.3f * mass * (squares.data[0] + squares.data[2]), 0.3f * mass * (squares.data[0] + squares.data[1]), 0, 0, 0);
+  vec3 tensor_val = (vec3){.x = 0.3f * mass * (squares.data[1] + squares.data[2]),
+                           .y = 0.3f * mass * (squares.data[0] + squares.data[2]),
+                           .z = 0.3f * mass * (squares.data[0] + squares.data[1])};
+
+  return (mat3){.data[0] = tensor_val.x,
+                .data[1] = 0.0f,
+                .data[2] = 0.0f,
+                .data[3] = 0.0f,
+                .data[4] = tensor_val.y,
+                .data[5] = 0.0f,
+                .data[6] = 0.0f,
+                .data[7] = 0.0f,
+                .data[8] = tensor_val.z};
 }
 
 static inline mat3 mat3_skew_symmetric(mat3 m1, vec3 v1) {

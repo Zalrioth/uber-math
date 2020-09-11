@@ -7,6 +7,9 @@
 #define VEC3_ZERO \
   (vec3) { .data[0] = 0.0f, .data[1] = 0.0f, .data[2] = 0.0f }
 
+#define VEC3_ONE \
+  (vec3) { .data[0] = 1.0f, .data[1] = 1.0f, .data[2] = 1.0f }
+
 typedef struct vec3 {
   union {
     struct {

@@ -162,6 +162,14 @@ static inline vec3 mat4_transform(mat4 m1, vec3 v1) {
                 .data[2] = v1.data[0] * m1.data[8] + v1.data[1] * m1.data[9] + v1.data[2] * m1.data[10] + m1.data[11]};
 }
 
+static inline mat4 mat4_scale(mat4 m1, vec3 v1) {
+  return (mat4){
+      .vecs[0] = vec4_scale(m1.vecs[0], v1.data[0]),
+      .vecs[1] = vec4_scale(m1.vecs[1], v1.data[1]),
+      .vecs[2] = vec4_scale(m1.vecs[2], v1.data[2]),
+      .vecs[3] = m1.vecs[3]};
+}
+
 static inline float mat4_determinant(mat4 m1) {
   return -m1.data[8] * m1.data[5] * m1.data[2] + m1.data[4] * m1.data[9] * m1.data[2] + m1.data[8] * m1.data[1] * m1.data[6] - m1.data[0] * m1.data[9] * m1.data[6] - m1.data[4] * m1.data[1] * m1.data[10] + m1.data[0] * m1.data[5] * m1.data[10];
 }
