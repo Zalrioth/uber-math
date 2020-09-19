@@ -26,6 +26,7 @@ typedef struct vec3 {
   };
 } vec3;
 
+static inline vec3 vec3_set(float s);
 static inline vec3 vec3_add(vec3 a, vec3 b);
 static inline vec3 vec3_sub(vec3 a, vec3 b);
 static inline vec3 vec3_mul(vec3 a, vec3 b);
@@ -47,6 +48,10 @@ static inline bool vec3_less_than_equal(vec3 v1, vec3 v2);
 static inline bool vec3_greater_than_equal(vec3 v1, vec3 v2);
 static inline vec3 vec3_invert(vec3 v1);
 static inline vec3 vec3_interpolate_linear(vec3 start, vec3 end, float progression);
+
+static inline vec3 vec3_set(float s) {
+  return (vec3){.data[0] = s, .data[1] = s, .data[2] = s};
+}
 
 static inline vec3 vec3_add(vec3 a, vec3 b) {
   return (vec3){.data[0] = a.data[0] + b.data[0], .data[1] = a.data[1] + b.data[1], .data[2] = a.data[2] + b.data[2]};
@@ -78,6 +83,7 @@ static inline float vec3_dot(vec3 a, vec3 b) {
 }
 
 // Vector product
+// TODO: remove products from these?
 static inline vec3 vec3_cross_product(vec3 v1, vec3 v2) {
   return (vec3){.data[0] = v1.data[1] * v2.data[2] - v1.data[2] * v2.data[1], .data[1] = v1.data[2] * v2.data[0] - v1.data[0] * v2.data[2], .data[2] = v1.data[0] * v2.data[1] - v1.data[1] * v2.data[0]};
 }
