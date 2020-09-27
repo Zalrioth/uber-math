@@ -31,6 +31,7 @@ static inline vec3 vec3_add(vec3 a, vec3 b);
 static inline vec3 vec3_sub(vec3 a, vec3 b);
 static inline vec3 vec3_mul(vec3 a, vec3 b);
 static inline vec3 vec3_div(vec3 a, vec3 b);
+static inline vec3 vec3_old_skool_divs(vec3 a, float s);
 static inline vec3 vec3_divs(vec3 a, float s);
 static inline vec3 vec3_scale(vec3 a, float s);
 static inline float vec3_dot(vec3 a, vec3 b);
@@ -41,6 +42,7 @@ static inline float vec3_magnitude(vec3 v1);
 static inline float vec3_square_magnitude(vec3 v1);
 static inline vec3 vec3_trim(vec3 v1, float size);
 static inline vec3 vec3_normalise(vec3 v1);
+static inline vec3 vec3_old_skool_normalise(vec3 v1);
 static inline bool vec3_equals(vec3 v1, vec3 v2);
 static inline bool vec3_less_than(vec3 v1, vec3 v2);
 static inline bool vec3_greater_than(vec3 v1, vec3 v2);
@@ -67,6 +69,14 @@ static inline vec3 vec3_mul(vec3 a, vec3 b) {
 
 static inline vec3 vec3_div(vec3 a, vec3 b) {
   return (vec3){.data[0] = a.data[0] / b.data[0], .data[1] = a.data[1] / b.data[1], .data[2] = a.data[2] / b.data[2]};
+}
+
+static inline vec3 vec3_old_skool_divs(vec3 a, float s) {
+  float factor = 1 / (float)s;
+  a.x *= factor;
+  a.y *= factor;
+  a.z *= factor;
+  return a;
 }
 
 static inline vec3 vec3_divs(vec3 a, float s) {
@@ -114,10 +124,21 @@ static inline vec3 vec3_trim(vec3 v1, float size) {
 }
 
 static inline vec3 vec3_normalise(vec3 v1) {
-  float length = vec3_magnitude(v1);
+  float ls = v1.data[0] * v1.data[0] + v1.data[1] * v1.data[1] + v1.data[2] * v1.data[2];
+  float length = sqrtf(ls);
   if (length > 0)
-    return vec3_scale(v1, ((float)1.0) / length);
+    return (vec3){.x = v1.data[0] / length, .y = v1.data[1] / length, .z = v1.data[2] / length};
   return v1;
+  //float length = vec3_magnitude(v1);
+  //if (length > 0)
+  //  return vec3_divs(v1, length);
+  ////return vec3_scale(v1, ((float)1.0) / length);
+  //return v1;
+}
+
+static inline vec3 vec3_old_skool_normalise(vec3 v1) {
+  float factor = 1.0f / (float)sqrt((v1.data[0] * v1.data[0]) + (v1.data[1] * v1.data[1]) + (v1.data[2] * v1.data[2]));
+  return (vec3){.data[0] = v1.data[0] * factor, .data[1] = v1.data[1] * factor, .data[2] = v1.data[2] * factor};
 }
 
 // TODO: Might just need to pass memory location of first variable
