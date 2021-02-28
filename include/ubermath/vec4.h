@@ -59,7 +59,7 @@ static inline float vec4_dot(vec4 a, vec4 b) {
   return a.data[0] * b.data[0] + a.data[1] * b.data[1] + a.data[2] * b.data[2] + a.data[3] * b.data[3];
 }
 
-typedef struct vec4_simd {
+/*typedef struct vec4_simd {
   union {
     struct {
       float x[SIMD_MAX_LENGTH], y[SIMD_MAX_LENGTH], z[SIMD_MAX_LENGTH], w[SIMD_MAX_LENGTH];
@@ -170,6 +170,6 @@ static inline void vec4_soa_scale(vec4_soa *a, size_t iter_num, float s) {
 
 static inline simd_float_max vec4_soa_dot(vec4_soa *a, size_t iter_num, vec4_simd b) {
   return simd_float_max_add(simd_float_max_add(simd_float_max_mul(a->simd_data[0][iter_num], b.simd_data[0]), simd_float_max_mul(a->simd_data[1][iter_num], b.simd_data[1])), simd_float_max_add(simd_float_max_mul(a->simd_data[2][iter_num], b.simd_data[2]), simd_float_max_mul(a->simd_data[3][iter_num], b.simd_data[3])));
-}
+}*/
 
 #endif  // VEC4_H

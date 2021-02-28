@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef USE_MATH_SIMD
 #if defined(__arm__) || defined(__aarch64__)
 #define ARCH_ARM
 #include <arm_neon.h>
@@ -50,6 +51,7 @@
 #define simd_float_max_sub _mm_sub_ps
 #define simd_float_max_mul _mm_mul_ps
 #define simd_float_max_div _mm_div_ps
+#endif
 #endif
 #endif
 

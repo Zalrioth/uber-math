@@ -166,13 +166,17 @@ static inline vec3 vec3_invert(vec3 v1) {
   return (vec3){.data[0] = -v1.data[0], .data[1] = -v1.data[1], .data[2] = -v1.data[2]};
 }
 
+//static inline vec3 vec3_lerp(vec3 v1, vec3 v2, float t) {
+//  return (vec3){.data[0] = v1.data[0] * (1.0f - t) + v2.data[0] * t, .data[1] = v1.data[1] * (1.0f - t) + v2.data[1] * t, .data[2] = v1.data[2] * (1.0f - t) + v2.data[2] * t};
+//}
+
 static inline vec3 vec3_interpolate_linear(vec3 start, vec3 end, float progression) {
   return (vec3){.data[0] = start.data[0] + (end.data[0] - start.data[0]) * progression,
                 .data[1] = start.data[1] + (end.data[1] - start.data[1]) * progression,
                 .data[2] = start.data[2] + (end.data[2] - start.data[2]) * progression};
 }
 
-typedef struct vec3_simd {
+/*typedef struct vec3_simd {
   union {
     struct {
       float x[SIMD_MAX_LENGTH], y[SIMD_MAX_LENGTH], z[SIMD_MAX_LENGTH];
@@ -201,9 +205,9 @@ typedef struct vec3_soa {
     struct {
       float *u, *v, *s;
     };
-    simd_align_max float* data[3];
+    simd_align_max float *data[3];
     struct {
-      simd_float_max* simd_data[3];
+      simd_float_max *simd_data[3];
     };
   };
 } vec3_soa;
@@ -286,6 +290,6 @@ static inline void vec3_soa_scale(vec3_soa* a, size_t iter_num, float s) {
 
 static inline simd_float_max vec3_soa_dot(vec3_soa* a, size_t iter_num, vec3_simd b) {
   return simd_float_max_add(simd_float_max_add(simd_float_max_mul(a->simd_data[0][iter_num], b.simd_data[0]), simd_float_max_mul(a->simd_data[1][iter_num], b.simd_data[1])), simd_float_max_mul(a->simd_data[2][iter_num], b.simd_data[2]));
-}
+}*/
 
 #endif  // VEC3_H
